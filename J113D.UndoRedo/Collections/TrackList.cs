@@ -1,8 +1,6 @@
-﻿using static J113D.UndoRedo.GlobalChangeTracker;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace J113D.UndoRedo.Collections
 {
@@ -10,7 +8,15 @@ namespace J113D.UndoRedo.Collections
     {
         private readonly IList<T> _list;
 
+        /// <summary>
+        /// Changetracker to use. If none is provided, <see cref="GlobalChangeTracker.ActiveChangeTracker"/> one will be used instead.
+        /// </summary>
+        public ChangeTracker? Tracker { get; set; }
 
+        private ChangeTracker UsedTracker => Tracker ?? GlobalChangeTracker.ActiveChangeTracker;
+
+
+        /// <inheritdoc/>
         public T this[int index]
         {
             get => _list[index];
@@ -18,64 +24,75 @@ namespace J113D.UndoRedo.Collections
             {
                 T previousItem = _list[index];
 
-                TrackCallbackChange(
+                UsedTracker.TrackCallbackChange(
                     () => _list[index] = value,
                     () => _list[index] = previousItem,
                     "List[]");
             }
         }
 
+        /// <inheritdoc/>
         public int Count => _list.Count;
 
+        /// <inheritdoc/>
         public bool IsReadOnly => _list.IsReadOnly;
 
 
-        public TrackList(IList<T> list)
+        public TrackList(IList<T> list, ChangeTracker? tracker)
         {
             _list = list;
+            Tracker = tracker;
         }
 
-        public TrackList() : this([]) { }
+        public TrackList(IList<T> list) : this(list, null) { }
+
+        public TrackList(ChangeTracker? tracker) : this([], tracker) { }
+
+        public TrackList() : this([], null) { }
 
 
+        /// <inheritdoc/>
         public void Add(T item)
         {
-            TrackCallbackChange(
+            UsedTracker.TrackCallbackChange(
                 () => _list.Add(item),
                 () => _list.Remove(item),
                 "List.Add");
         }
 
+        /// <inheritdoc/>
         public void AddRange(IEnumerable<T> range)
         {
-            BeginChangeGroup("List.AddRange");
+            UsedTracker.BeginGroup("List.AddRange");
             foreach(T item in range)
             {
                 Add(item);
             }
 
-            EndChangeGroup();
+            UsedTracker.EndGroup();
         }
 
+        /// <inheritdoc/>
         public void Insert(int index, T item)
         {
-            TrackCallbackChange(
+            UsedTracker.TrackCallbackChange(
                 () => _list.Insert(index, item),
                 () => _list.RemoveAt(index),
                 "List.Insert");
         }
 
+        /// <inheritdoc/>
         public bool Remove(T item)
         {
             int index = IndexOf(item);
 
             if(index < 0)
             {
-                BlankChange("List.Insert");
+                UsedTracker.BlankChange("List.Insert");
                 return false;
             }
 
-            TrackCallbackChange(
+            UsedTracker.TrackCallbackChange(
                 () => _list.RemoveAt(index),
                 () => _list.Insert(index, item),
                 "List.Insert");
@@ -83,27 +100,29 @@ namespace J113D.UndoRedo.Collections
             return true;
         }
 
+        /// <inheritdoc/>
         public void RemoveAt(int index)
         {
             if(index >= _list.Count)
             {
-                BlankChange("List.RemoveAt");
+                UsedTracker.BlankChange("List.RemoveAt");
                 return;
             }
 
             T item = this[index];
 
-            TrackCallbackChange(
+            UsedTracker.TrackCallbackChange(
                 () => _list.RemoveAt(index),
                 () => _list.Insert(index, item),
                 "List.RemoveAt");
         }
 
+        /// <inheritdoc/>
         public void Clear()
         {
             T[] contents = [.. _list];
 
-            TrackCallbackChange(
+            UsedTracker.TrackCallbackChange(
                 _list.Clear,
                 () =>
                 {
@@ -116,22 +135,25 @@ namespace J113D.UndoRedo.Collections
         }
 
 
-
+        /// <inheritdoc/>
         public void CopyTo(T[] array, int arrayIndex)
         {
             _list.CopyTo(array, arrayIndex);
         }
 
+        /// <inheritdoc/>
         public bool Contains(T item)
         {
             return _list.Contains(item);
         }
 
+        /// <inheritdoc/>
         public int IndexOf(T item)
         {
             return _list.IndexOf(item);
         }
 
+        /// <inheritdoc/>
         public T? Find(Predicate<T> match)
         {
             foreach(T item in this)
@@ -145,6 +167,7 @@ namespace J113D.UndoRedo.Collections
             return default;
         }
 
+        /// <inheritdoc/>
         public List<T> FindAll(Predicate<T> match)
         {
             List<T> result = [];
@@ -160,6 +183,7 @@ namespace J113D.UndoRedo.Collections
             return result;
         }
 
+        /// <inheritdoc/>
         public int FindIndex(int startIndex, int count, Predicate<T> match)
         {
             for(int i = startIndex; i < count; i++)
@@ -174,16 +198,19 @@ namespace J113D.UndoRedo.Collections
             return -1;
         }
 
+        /// <inheritdoc/>
         public int FindIndex(int startIndex, Predicate<T> match)
         {
             return FindIndex(startIndex, Count, match);
         }
 
+        /// <inheritdoc/>
         public int FindIndex(Predicate<T> match)
         {
             return FindIndex(0, Count, match);
         }
 
+        /// <inheritdoc/>
         public T? FindLast(Predicate<T> match)
         {
             T? result = default;
@@ -199,6 +226,7 @@ namespace J113D.UndoRedo.Collections
             return result;
         }
 
+        /// <inheritdoc/>
         public int FindLastIndex(int startIndex, int count, Predicate<T> match)
         {
             int result = -1;
@@ -215,21 +243,25 @@ namespace J113D.UndoRedo.Collections
             return result;
         }
 
+        /// <inheritdoc/>
         public int FindLastIndex(int startIndex, Predicate<T> match)
         {
             return FindLastIndex(startIndex, Count, match);
         }
 
+        /// <inheritdoc/>
         public int FindLastIndex(Predicate<T> match)
         {
             return FindLastIndex(0, Count, match);
         }
 
+        /// <inheritdoc/>
         public IEnumerator<T> GetEnumerator()
         {
             return _list.GetEnumerator();
         }
 
+        /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

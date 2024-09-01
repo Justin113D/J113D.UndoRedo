@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace J113D.UndoRedo.Test
+﻿namespace J113D.UndoRedo.Test
 {
     [TestClass]
     public class PinTests
