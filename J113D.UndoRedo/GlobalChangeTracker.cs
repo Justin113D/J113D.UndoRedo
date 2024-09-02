@@ -33,7 +33,7 @@ namespace J113D.UndoRedo
         /// <summary>
         /// Creates a pin for the current state of the tracker. Can be used to check if a change has been tracked, undone or redone.
         /// </summary>
-        public static ChangeTracker.Pin PinCurrent()
+        public static ChangeTracker.Pin PinCurrentChange()
         {
             return ActiveChangeTracker.PinCurrent();
         }
