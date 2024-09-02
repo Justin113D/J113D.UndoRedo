@@ -25,7 +25,7 @@ namespace J113D.UndoRedo
         /// </summary>
         public static int ChangeLimit => ActiveChangeTracker.ChangeLimit;
 
-        public static void Use(this ChangeTracker tracker)
+        public static void UseTracker(this ChangeTracker tracker)
         {
             ActiveChangeTracker = tracker;
         }
@@ -42,7 +42,7 @@ namespace J113D.UndoRedo
         /// <summary>
         /// Resets the tracked changes.
         /// </summary>
-        public static void Reset()
+        public static void ResetTracker()
         {
             ActiveChangeTracker.Reset();
         }
@@ -50,7 +50,7 @@ namespace J113D.UndoRedo
         /// <summary>
         /// Undoes the last change.
         /// </summary>
-        public static bool Undo()
+        public static bool UndoChange()
         {
             return ActiveChangeTracker.Undo();
         }
@@ -58,7 +58,7 @@ namespace J113D.UndoRedo
         /// <summary>
         /// Redoes the last undone change.
         /// </summary>
-        public static bool Redo()
+        public static bool RedoChange()
         {
             return ActiveChangeTracker.Redo();
         }
