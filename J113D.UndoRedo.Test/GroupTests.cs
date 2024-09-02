@@ -141,14 +141,14 @@ namespace J113D.UndoRedo.Test
                     AssertPropertyChanged(3);
                 }
 
-                tracker.EndGroup();
+                tracker.EndGroup(false);
 
                 AssertCallback(0);
                 AssertPostCallback(6);
                 AssertPropertyChanged(8);
             }
 
-            tracker.EndGroup();
+            tracker.EndGroup(false);
 
             counter = 0;
             tracker.Undo();
@@ -214,14 +214,14 @@ namespace J113D.UndoRedo.Test
                     AssertPropertyChanged(3);
                 }
 
-                tracker.EndGroup();
+                tracker.EndGroup(false);
 
                 AssertCallback(4);
                 AssertPostCallback(6);
                 AssertPropertyChanged(8);
             }
 
-            tracker.EndGroup();
+            tracker.EndGroup(false);
 
             tracker.Undo();
             counter = 0;
@@ -262,7 +262,7 @@ namespace J113D.UndoRedo.Test
 
             tracker.BeginGroup();
             tracker.TrackPropertyChange(container, nameof(TestContainer.StringProperty), newValue);
-            tracker.EndGroup(true);
+            tracker.EndGroup(discard: true);
 
             Assert.AreEqual(container.StringProperty, oldValue);
         }
@@ -280,7 +280,7 @@ namespace J113D.UndoRedo.Test
             tracker.TrackPropertyChange(container, nameof(TestContainer.StringProperty), newValue);
             tracker.BeginGroup();
             tracker.TrackFieldChange(container, nameof(TestContainer.stringField), newValue);
-            tracker.EndGroup(true);
+            tracker.EndGroup(discard: true);
             tracker.EndGroup();
 
             Assert.AreEqual(container.stringField, oldFieldValue);

@@ -100,10 +100,11 @@ namespace J113D.UndoRedo
         /// <summary>
         /// Closes the active grouping and adds it to the tracklist or parent group.
         /// </summary>
+        /// <param name="flatten">Adds any contents of the current group to the parent group, if one exists.</param>
         /// <param name="discard">Undoes any changes done by the grouping and does not add it to the tracklist/parent group.</param>
-        public static void EndChangeGroup(bool discard = false)
+        public static void EndChangeGroup(bool flatten = true, bool discard = false)
         {
-            ActiveChangeTracker.EndGroup(discard);
+            ActiveChangeTracker.EndGroup(flatten, discard);
         }
 
 

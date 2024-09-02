@@ -253,8 +253,9 @@ namespace J113D.UndoRedo
         /// <summary>
         /// Closes the active grouping and adds it to the tracklist or parent group.
         /// </summary>
+        /// <param name="flatten">Adds any contents of the current group to the parent group, if one exists.</param>
         /// <param name="discard">Undoes any changes done by the grouping and does not add it to the tracklist/parent group.</param>
-        public void EndGroup(bool discard = false)
+        public void EndGroup(bool flatten = true, bool discard = false)
         {
             if(!_activeGroups.TryPop(out TrackGroup? group))
             {
@@ -282,6 +283,12 @@ namespace J113D.UndoRedo
                     && group.PropertyChanges.Count == 0
                     ? group.Changes[0]
                     : group);
+            }
+            else if(flatten)
+            {
+                parentGroup.Changes.AddRange(group.Changes);
+                parentGroup.PostCallbacks.AddRange(group.PostCallbacks);
+                parentGroup.PropertyChanges.UnionWith(group.PropertyChanges);
             }
             else if(group.PostCallbacks.Count == 0
                 && group.PropertyChanges.Count == 0)
