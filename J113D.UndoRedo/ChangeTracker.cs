@@ -11,6 +11,7 @@ namespace J113D.UndoRedo
     {
         #region Private
 
+        private int _changeLimit;
         private long _resets;
         private long _capacityCausedShifts;
         private int _currentChangeIndex;
@@ -82,10 +83,10 @@ namespace J113D.UndoRedo
         /// </summary>
         public int ChangeLimit
         {
-            get => _trackedChanges.Capacity;
+            get => _changeLimit;
             set
             {
-                if(ChangeLimit == value)
+                if(_changeLimit == value)
                 {
                     return;
                 }
@@ -94,7 +95,7 @@ namespace J113D.UndoRedo
                     Reset();
                 }
 
-                _trackedChanges.Capacity = ChangeLimit;
+                _changeLimit = value;
             }
         }
 
