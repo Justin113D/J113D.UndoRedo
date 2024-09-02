@@ -80,5 +80,19 @@
 
             Assert.IsTrue(pin.IsValid);
         }
+
+        [TestMethod]
+        public void Pin_LimitShift_After()
+        {
+            ChangeTracker tracker = new(5);
+
+            for(int i = 0; i < tracker.ChangeLimit + 1; i++)
+            {
+                tracker.BlankChange();
+            }
+
+            ChangeTracker.Pin pin = tracker.PinCurrent();
+            Assert.IsTrue(pin.IsValid);
+        }
     }
 }

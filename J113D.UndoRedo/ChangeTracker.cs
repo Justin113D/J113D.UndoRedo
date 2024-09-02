@@ -26,7 +26,7 @@ namespace J113D.UndoRedo
         {
             private readonly ChangeTracker _tracker;
             private readonly ITrackable? _tracking;
-            private readonly int _index;
+            private readonly long _index;
             private readonly long _resets;
 
             public bool IsValid
@@ -58,8 +58,8 @@ namespace J113D.UndoRedo
             internal Pin(ChangeTracker tracker)
             {
                 _tracker = tracker;
-                _index = tracker._currentChangeIndex;
-                _tracking = _index == -1 ? null : tracker._trackedChanges[_index];
+                _index = tracker._currentChangeIndex + _tracker._capacityCausedShifts;
+                _tracking = tracker._currentChangeIndex == -1 ? null : tracker._trackedChanges[tracker._currentChangeIndex];
                 _resets = tracker._resets;
             }
         }
