@@ -11,9 +11,9 @@ namespace J113D.UndoRedo
     {
         #region Private
 
-        private int _changeLimit;
         private long _resets;
-        private long _capacityCausedShifts;
+        private int _changeLimit;
+        private long _limitCausedShifts;
         private int _currentChangeIndex;
         private readonly Stack<TrackGroup> _activeGroups;
         private readonly List<ITrackable> _trackedChanges;
@@ -39,7 +39,7 @@ namespace J113D.UndoRedo
                         return false;
                     }
 
-                    int realChangeIndex = (int)(_index - _tracker._capacityCausedShifts);
+                    int realChangeIndex = (int)(_index - _tracker._limitCausedShifts);
 
                     if(realChangeIndex != _tracker._currentChangeIndex)
                     {
@@ -59,7 +59,7 @@ namespace J113D.UndoRedo
             internal Pin(ChangeTracker tracker)
             {
                 _tracker = tracker;
-                _index = tracker._currentChangeIndex + _tracker._capacityCausedShifts;
+                _index = tracker._currentChangeIndex + _tracker._limitCausedShifts;
                 _tracking = tracker._currentChangeIndex == -1 ? null : tracker._trackedChanges[tracker._currentChangeIndex];
                 _resets = tracker._resets;
             }
@@ -103,11 +103,11 @@ namespace J113D.UndoRedo
         /// <summary>
         /// Creates a new change tracker
         /// </summary>
-        public ChangeTracker(int capacity = 0)
+        public ChangeTracker(int changeLimit = 0)
         {
             _activeGroups = [];
             _trackedChanges = [];
-            _trackedChanges.Capacity = capacity;
+            ChangeLimit = changeLimit;
             _currentChangeIndex = -1;
         }
 
@@ -121,10 +121,10 @@ namespace J113D.UndoRedo
                 _trackedChanges.RemoveRange(removeStart, removeCount);
             }
 
-            if(_trackedChanges.Capacity > 0 && _trackedChanges.Count == _trackedChanges.Capacity)
+            if(ChangeLimit > 0 && _trackedChanges.Count == ChangeLimit)
             {
                 _trackedChanges.RemoveAt(0);
-                _capacityCausedShifts++;
+                _limitCausedShifts++;
             }
             else
             {
@@ -161,7 +161,7 @@ namespace J113D.UndoRedo
 
             _trackedChanges.Clear();
             _currentChangeIndex = -1;
-            _capacityCausedShifts = 0;
+            _limitCausedShifts = 0;
             _resets++;
         }
 
@@ -309,7 +309,7 @@ namespace J113D.UndoRedo
 
             if(_activeGroups.TryPeek(out TrackGroup? group))
             {
-                group.Changes.Add(trackable); 
+                group.Changes.Add(trackable);
             }
             else
             {
