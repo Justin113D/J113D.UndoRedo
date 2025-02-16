@@ -1,0 +1,3 @@
+[submodule "src/J113D.ProjectConfigurations"]
+	path = src/J113D.ProjectConfigurations
+	url = https://github.com/Justin113D/J113D.ProjectConfigurations.git
