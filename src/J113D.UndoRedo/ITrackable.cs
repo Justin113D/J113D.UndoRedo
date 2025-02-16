@@ -1,11 +1,11 @@
 ﻿namespace J113D.UndoRedo
 {
-    internal interface ITrackable
-    {
-        public string? Origin { get; }
+	internal interface ITrackable
+	{
+		public string? Origin { get; }
 
-        public void Undo();
+		public void Undo();
 
-        public void Redo();
-    }
+		public void Redo();
+	}
 }
