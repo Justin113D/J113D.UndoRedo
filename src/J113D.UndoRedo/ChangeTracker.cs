@@ -324,7 +324,7 @@ namespace J113D.UndoRedo
         /// <param name="redo"></param>
         /// <param name="undo"></param>
         /// <param name="origin">Name of the origin (for debugging purposes).</param>
-        public void TrackCallbackChange(Action redo, Action undo, string? origin = null)
+        public void TrackCallbackChange(Action? redo, Action? undo, string? origin = null)
         {
             TrackChange(new CallbackChange(origin, redo, undo));
         }

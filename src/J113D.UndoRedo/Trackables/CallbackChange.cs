@@ -7,11 +7,16 @@ namespace J113D.UndoRedo.Trackables
     {
         public string? Origin { get; }
 
-        private readonly Action _redoCallback;
-        private readonly Action _undoCallback;
+        private readonly Action? _redoCallback;
+        private readonly Action? _undoCallback;
 
-        public CallbackChange(string? origin, Action redoCallback, Action undoCallback)
+        public CallbackChange(string? origin, Action? redoCallback, Action? undoCallback)
         {
+            if(redoCallback == null && undoCallback == null)
+            {
+                throw new ArgumentNullException(nameof(undoCallback), "At least one callback has to be non-null!");
+            }
+
             Origin = origin;
             _redoCallback = redoCallback;
             _undoCallback = undoCallback;
@@ -19,12 +24,12 @@ namespace J113D.UndoRedo.Trackables
 
         public readonly void Redo()
         {
-            _redoCallback.Invoke();
+            _redoCallback?.Invoke();
         }
 
         public readonly void Undo()
         {
-            _undoCallback();
+            _undoCallback?.Invoke();
         }
 
         public override bool Equals(object? obj)
