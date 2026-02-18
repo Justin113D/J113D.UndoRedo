@@ -1,6 +1,10 @@
 ﻿J113D.UndoRedo.ChangeTracker
 J113D.UndoRedo.ChangeTracker.AddGroupInvokePropertyChanged(J113D.UndoRedo.IInvokeNotifyPropertyChanged! target, string! propertyName) -> void
 J113D.UndoRedo.ChangeTracker.AddGroupPostCallback(System.Action! callback) -> void
+J113D.UndoRedo.ChangeTracker.AfterChangeTracked -> J113D.UndoRedo.ChangeTrackEventHandler?
+J113D.UndoRedo.ChangeTracker.AfterRedo -> J113D.UndoRedo.ChangeTrackEventHandler?
+J113D.UndoRedo.ChangeTracker.AfterReset -> J113D.UndoRedo.ChangeTrackEventHandler?
+J113D.UndoRedo.ChangeTracker.AfterUndo -> J113D.UndoRedo.ChangeTrackEventHandler?
 J113D.UndoRedo.ChangeTracker.BeginGroup(string? origin = null) -> void
 J113D.UndoRedo.ChangeTracker.BlankChange(string? origin = null) -> void
 J113D.UndoRedo.ChangeTracker.CanRedo.get -> bool
@@ -20,6 +24,7 @@ J113D.UndoRedo.ChangeTracker.TrackFieldChange(object! target, string! fieldName,
 J113D.UndoRedo.ChangeTracker.TrackPropertyChange(object! target, string! propertyName, object? value, string? origin = null) -> void
 J113D.UndoRedo.ChangeTracker.TrackValueChange<T>(System.Action<T>! changeCallback, T oldValue, T newValue, string? origin = null) -> void
 J113D.UndoRedo.ChangeTracker.Undo() -> bool
+J113D.UndoRedo.ChangeTrackEventHandler
 J113D.UndoRedo.Collections.TrackCollection<T>
 J113D.UndoRedo.Collections.TrackCollection<T>.Add(T item) -> void
 J113D.UndoRedo.Collections.TrackCollection<T>.Clear() -> void

@@ -104,6 +104,27 @@ namespace J113D.UndoRedo
 
 
 		/// <summary>
+		/// Event invoked after <see cref="Reset"/> was (successfully) called
+		/// </summary>
+		public event ChangeTrackEventHandler? AfterReset;
+
+		/// <summary>
+		/// Event invoked after <see cref="Undo"/> was (successfully) called
+		/// </summary>
+		public event ChangeTrackEventHandler? AfterUndo;
+
+		/// <summary>
+		/// Event invoked after <see cref="Redo"/> was (successfully) called
+		/// </summary>
+		public event ChangeTrackEventHandler? AfterRedo;
+
+		/// <summary>
+		/// Event invoked after a change was added to the stack
+		/// </summary>
+		public event ChangeTrackEventHandler? AfterChangeTracked;
+
+
+		/// <summary>
 		/// Creates a new change tracker
 		/// </summary>
 		public ChangeTracker(int changeLimit = 0)
@@ -135,6 +156,7 @@ namespace J113D.UndoRedo
 			}
 
 			_trackedChanges.Add(trackable);
+			AfterChangeTracked?.Invoke(this);
 		}
 
 		/// <summary>
@@ -166,6 +188,7 @@ namespace J113D.UndoRedo
 			_currentChangeIndex = -1;
 			_limitCausedShifts = 0;
 			_resets++;
+			AfterReset?.Invoke(this);
 		}
 
 		/// <summary>
@@ -185,6 +208,7 @@ namespace J113D.UndoRedo
 
 			_trackedChanges[_currentChangeIndex].Undo();
 			_currentChangeIndex--;
+			AfterUndo?.Invoke(this);
 			return true;
 		}
 
@@ -205,6 +229,7 @@ namespace J113D.UndoRedo
 
 			_currentChangeIndex++;
 			_trackedChanges[_currentChangeIndex].Redo();
+			AfterRedo?.Invoke(this);
 			return true;
 		}
 
@@ -318,6 +343,7 @@ namespace J113D.UndoRedo
 			{
 				AddTrackable(trackable);
 			}
+
 		}
 
 		/// <summary>
