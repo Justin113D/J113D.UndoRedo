@@ -3,7 +3,7 @@
 	<Import Project="../J113D.ProjectConfigurations/NuGet.Build.props" />
 	
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<RootNamespace>J113D.UndoRedo</RootNamespace>
 	</PropertyGroup>
 
@@ -21,8 +21,8 @@
 
 
 	<ItemGroup>
-	  <None Remove="PublicAPI\net8.0\PublicAPI.Shipped.txt" />
-	  <None Remove="PublicAPI\net8.0\PublicAPI.Unshipped.txt" />
+	  <None Remove="PublicAPI\net10.0\PublicAPI.Shipped.txt" />
+	  <None Remove="PublicAPI\net10.0\PublicAPI.Unshipped.txt" />
 	</ItemGroup>
 	
 	<ItemGroup>
